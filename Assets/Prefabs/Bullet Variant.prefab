@@ -8,6 +8,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -6753559016230539885, guid: 014ece1d9b3d5584a90f51f2db3a1fa3, type: 3}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -6753559016230539885, guid: 014ece1d9b3d5584a90f51f2db3a1fa3, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 962122934999853159, guid: 014ece1d9b3d5584a90f51f2db3a1fa3, type: 3}
       propertyPath: m_Name
       value: Bullet Variant
@@ -55,6 +63,10 @@ PrefabInstance:
     - target: {fileID: 1031932586707861568, guid: 014ece1d9b3d5584a90f51f2db3a1fa3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001746713282304571, guid: 014ece1d9b3d5584a90f51f2db3a1fa3, type: 3}
+      propertyPath: ignoreTag
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 5081449476837436080, guid: 014ece1d9b3d5584a90f51f2db3a1fa3, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'

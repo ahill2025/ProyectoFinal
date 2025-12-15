@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6133990332845107380}
   m_Layer: 0
   m_Name: Base
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86152eb3cff54224099fd454745e9589, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Life
-  amount: 10000000
+  amount: 8000
   onDeath:
     m_PersistentCalls:
       m_Calls: []
