@@ -66,5 +66,5 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "ProyectoFinal.sln"
+    "dotnet.defaultSolution": "FINALproject.sln"
 }
