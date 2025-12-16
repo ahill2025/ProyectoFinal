@@ -61,11 +61,6 @@ using UnityEngine;
 // }
 
 
-/////////////
-/// /////////
-/// 
-/// Implementing Jump Button
-
 public class PlayerControllerT5 : MonoBehaviour
 {
     [SerializeField]

@@ -1,3 +1,112 @@
+using System;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PlayerMovement : MonoBehaviour
+{
+    [SerializeField]
+    private float Speed, rotationSpeed, height, sprint;
+
+    private Vector2 movementValue;
+    private bool contact;
+    private float sprintValue = 1;
+    private float lookValue;
+
+    // Animator
+    [SerializeField] private Animator animator;
+    private bool isSprinting;
+    private Vector2 movementInputRaw;
+
+    private Rigidbody _rigidbody;
+
+    private void Awake()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        _rigidbody = GetComponent<Rigidbody>();
+
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
+    }
+
+    // ORIGINAL jump logic + animation trigger
+    public void OnJump(InputValue button)
+    {
+        if (contact)
+        {
+            _rigidbody.AddForce(0, height, 0);
+
+            if (animator != null)
+            {
+                animator.SetTrigger("Jump");
+            }
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        contact = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        contact = false;
+    }
+
+    public void OnMove(InputValue value)
+    {
+        movementInputRaw = value.Get<Vector2>();
+        movementValue = movementInputRaw * Speed;
+    }
+
+    public void OnSprint(InputValue button)
+    {
+        if (button.isPressed)
+        {
+            sprintValue = sprint;
+            isSprinting = true;
+        }
+        else
+        {
+            sprintValue = 1;
+            isSprinting = false;
+        }
+    }
+
+    public void OnLook(InputValue value)
+    {
+        lookValue = value.Get<Vector2>().x * rotationSpeed;
+    }
+
+    void Update()
+    {
+        transform.Translate(
+            movementValue.x * sprintValue * Time.deltaTime,
+            0,
+            movementValue.y * sprintValue * Time.deltaTime
+        );
+
+        transform.Rotate(0, lookValue * Time.deltaTime, 0);
+
+        bool isMoving = movementInputRaw.sqrMagnitude > 0.01f;
+
+        if (animator != null)
+        {
+            animator.SetFloat("MoveX", movementInputRaw.x);
+            animator.SetFloat("MoveY", movementInputRaw.y);
+            animator.SetBool("IsSprinting", isSprinting && isMoving);
+            animator.SetBool("IsGrounded", contact);
+        }
+    }
+}
+
+
+
+
+
 // using System;
 // using Unity.VisualScripting;
 // using UnityEngine;
@@ -496,242 +605,3 @@
 
 
 
-using System;
-using UnityEngine;
-using UnityEngine.InputSystem;
-
-public class PlayerMovement : MonoBehaviour
-{
-    [SerializeField]
-    private float Speed, rotationSpeed, height, sprint;
-
-    private Vector2 movementValue;
-    private bool contact;
-    private float sprintValue = 1;
-    private float lookValue;
-
-    // Animator
-    [SerializeField] private Animator animator;
-    private bool isSprinting;
-    private Vector2 movementInputRaw;
-
-    private Rigidbody _rigidbody;
-
-    private void Awake()
-    {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
-        _rigidbody = GetComponent<Rigidbody>();
-
-        if (animator == null)
-        {
-            animator = GetComponentInChildren<Animator>();
-        }
-    }
-
-    // ORIGINAL jump logic + animation trigger
-    public void OnJump(InputValue button)
-    {
-        if (contact)
-        {
-            _rigidbody.AddForce(0, height, 0);
-
-            if (animator != null)
-            {
-                animator.SetTrigger("Jump");
-            }
-        }
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        contact = true;
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        contact = false;
-    }
-
-    public void OnMove(InputValue value)
-    {
-        movementInputRaw = value.Get<Vector2>();
-        movementValue = movementInputRaw * Speed;
-    }
-
-    public void OnSprint(InputValue button)
-    {
-        if (button.isPressed)
-        {
-            sprintValue = sprint;
-            isSprinting = true;
-        }
-        else
-        {
-            sprintValue = 1;
-            isSprinting = false;
-        }
-    }
-
-    public void OnLook(InputValue value)
-    {
-        lookValue = value.Get<Vector2>().x * rotationSpeed;
-    }
-
-    void Update()
-    {
-        transform.Translate(
-            movementValue.x * sprintValue * Time.deltaTime,
-            0,
-            movementValue.y * sprintValue * Time.deltaTime
-        );
-
-        transform.Rotate(0, lookValue * Time.deltaTime, 0);
-
-        bool isMoving = movementInputRaw.sqrMagnitude > 0.01f;
-
-        if (animator != null)
-        {
-            animator.SetFloat("MoveX", movementInputRaw.x);
-            animator.SetFloat("MoveY", movementInputRaw.y);
-            animator.SetBool("IsSprinting", isSprinting && isMoving);
-            animator.SetBool("IsGrounded", contact);
-        }
-    }
-}
-
-
-
-
-
-
-
-    // public void OnSprint(InputValue value)
-    // {
-    //     if (value.Get<float>() == 1)   // Activated when 'Shift' key is pressed
-    //     {
-    //         sprintValue = sprint;
-    //     }
-
-    //     if (value.Get<float>() == 0)    // Activated when 'Shift' key is not pressed
-    //     {
-    //         sprintValue = 1;
-    //     }
-    // }
-
-
-
-
-
-//     using UnityEngine;
-// using UnityEngine.InputSystem;
-
-// public class PlayerMovement : MonoBehaviour
-// {
-//     [SerializeField] private float Speed, rotationSpeed, height, sprint;
-
-//     // Ground Check
-//     [SerializeField] private float groundCheckRadius = 0.25f;
-//     [SerializeField] private float groundCheckDistance = 0.35f;
-//     [SerializeField] private LayerMask groundMask = ~0; // Everything by default
-
-//     private Vector2 movementInputRaw;
-//     private Vector2 movementValue;
-//     private float sprintValue = 1f;
-//     private float lookValue;
-
-//     private bool contact;
-//     private bool isSprinting;
-
-//     [SerializeField] private Animator animator;
-
-//     private Rigidbody _rigidbody;
-
-//     private void Awake()
-//     {
-//         Cursor.visible = false;
-//         Cursor.lockState = CursorLockMode.Locked;
-
-//         _rigidbody = GetComponent<Rigidbody>();
-
-//         if (animator == null)
-//         {
-//             animator = GetComponentInChildren<Animator>();
-//         }
-//     }
-
-//     public void OnMove(InputValue value)
-//     {
-//         movementInputRaw = value.Get<Vector2>();
-//         movementValue = movementInputRaw * Speed;
-//     }
-
-//     public void OnSprint(InputValue button)
-//     {
-//         if (button.isPressed)
-//         {
-//             sprintValue = sprint;
-//             isSprinting = true;
-//         }
-//         else
-//         {
-//             sprintValue = 1f;
-//             isSprinting = false;
-//         }
-//     }
-
-//     public void OnLook(InputValue value)
-//     {
-//         lookValue = value.Get<Vector2>().x * rotationSpeed;
-//     }
-
-//     public void OnJump(InputValue button)
-//     {
-//         if (contact)
-//         {
-//             Vector3 v = _rigidbody.linearVelocity;
-//             _rigidbody.linearVelocity = new Vector3(v.x, 0f, v.z);
-
-//             _rigidbody.AddForce(Vector3.up * height, ForceMode.VelocityChange);
-
-//             if (animator != null)
-//             {
-//                 animator.SetTrigger("Jump");
-//             }
-//         }
-//     }
-
-//     private void Update()
-//     {
-//         transform.Rotate(0f, lookValue * Time.deltaTime, 0f);
-
-//         contact = Physics.SphereCast(
-//             origin: transform.position + Vector3.up * 0.1f,
-//             radius: groundCheckRadius,
-//             direction: Vector3.down,
-//             hitInfo: out _,
-//             maxDistance: groundCheckDistance,
-//             layerMask: groundMask,
-//             queryTriggerInteraction: QueryTriggerInteraction.Ignore
-//         );
-
-//         bool isMoving = movementInputRaw.sqrMagnitude > 0.01f;
-
-//         if (animator != null)
-//         {
-//             animator.SetFloat("MoveX", movementInputRaw.x);
-//             animator.SetFloat("MoveY", movementInputRaw.y);
-//             animator.SetBool("IsSprinting", isSprinting && isMoving);
-//             animator.SetBool("IsGrounded", contact);
-//         }
-//     }
-
-//     private void FixedUpdate()
-//     {
-//         Vector3 moveLocal = new Vector3(movementValue.x * sprintValue, 0f, movementValue.y * sprintValue);
-//         Vector3 moveWorld = transform.TransformDirection(moveLocal) * Time.fixedDeltaTime;
-
-//         _rigidbody.MovePosition(_rigidbody.position + moveWorld);
-//     }
-// }
